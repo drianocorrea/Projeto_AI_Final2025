@@ -3,7 +3,9 @@
 ---
 
 - Instalar biblioteca networkx junto com matplotlib. 
+
     *_pip install networkx matplotlib_*
+    
 - Abrir a pasta do projeto acessando todos os itens
 - Arquivo principal para rodar a aplicação: _App.py_
 - Enjoy!
