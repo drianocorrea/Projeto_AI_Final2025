@@ -1,4 +1,4 @@
-from listPath1 import listPath
+from listPath import listPath
 
 
 class searchPath(object):
@@ -76,7 +76,7 @@ class searchPath(object):
                         caminho += l2.exibeCaminho()
                         # print("\nFila:\n",l1.exibeLista())
                         # print("\nÁrvore de busca:\n",l2.exibeLista())
-                        return caminho
+                    return caminho
 
         return None
     # ---------------------------------------------
@@ -136,9 +136,7 @@ class searchPath(object):
     # ---------------------------------------------
     # BUSCA EM PROFUNDIDADE LIMITADA
 
-    def proflimitada(self, inicio, fim, nos, grafo):
-        # limite estabelecido no calculo ponderado como lim=5
-        lim=5
+    def prof_limitada(self, inicio, fim, nos, grafo, lim):
         # manipular a PILHA para a busca
         l1 = listPath()
 
@@ -246,7 +244,7 @@ class searchPath(object):
                                 return caminho
 
         return None
-    # ----------------------------------------------------  # BUSCA BIDIRECIONAL
+    # ------------------------------------------------------------------------------    # BUSCA BIDIRECIONAL
 
     def bidirecional(self, inicio, fim, nos, grafo):
         # Primeiro Amplitude"
@@ -367,3 +365,152 @@ class searchPath(object):
             ni += 1
 
         return "caminho não encontrado"
+
+    # ---------------------------------------------
+    # BUSCA EM CUSTO UNIFORME
+
+    def custo_uniforme(self, inicio, fim, nos, grafo):
+        l1 = listPath()  # Fila de prioridade (menor custo primeiro)
+        l2 = listPath()  # Árvore de busca
+
+        l1.insereUltimo(inicio, 0, 0, None)
+        l2.insereUltimo(inicio, 0, 0, None)
+
+        visitados = []
+
+        while not l1.vazio():
+            atual = l1.deletaPrimeiro()
+
+            if atual.estado == fim:
+                return l2.exibeCaminho()
+
+            if atual.estado in [v[0] for v in visitados]:
+                continue
+
+            visitados.append((atual.estado, atual.v1))
+
+            ind = nos.index(atual.estado)
+            # Agora usa as tuplas (cidade, custo)
+            for cidade, custo in self.sucessores(ind, grafo, 1):
+                novo_custo = atual.v1 + custo  # Usa o custo real da conexão
+
+                # Verifica se já foi visitado com custo menor
+                if not any(v[0] == cidade and v[1] <= novo_custo for v in visitados):
+                    l1.insereUltimo(cidade, novo_custo, 0, atual)
+                    l2.insereUltimo(cidade, novo_custo, 0, atual)
+
+        return None
+
+    # ---------------------------------------------
+    # BUSCA GULOSA OU GREEDY
+
+    def greedy(self, inicio, fim, nos, grafo, heuristica):
+        l1 = listPath()  # Ordenado pela heurística
+        l2 = listPath()  # Árvore de busca
+
+        l1.insereUltimo(inicio, 0, heuristica[inicio], None)
+        l2.insereUltimo(inicio, 0, heuristica[inicio], None)
+
+        visitados = []
+
+        while not l1.vazio():
+            atual = l1.deletaPrimeiro()
+
+            if atual.estado == fim:
+                return l2.exibeCaminho()
+
+            if atual.estado in visitados:
+                continue
+
+            visitados.append(atual.estado)
+
+            ind = nos.index(atual.estado)
+            for conexao in grafo[ind][1:]:
+                if conexao not in visitados:
+                    h = heuristica[conexao]
+                    l1.insereUltimo(conexao, 0, h, atual)
+                    l2.insereUltimo(conexao, 0, h, atual)
+
+        return None
+
+    # ---------------------------------------------
+    # BUSCA A ESTRELA
+
+    def a_estrela(self, inicio, fim, nos, grafo, heuristica):
+        l1 = listPath()  # Ordenado por f(n) = g(n) + h(n)
+        l2 = listPath()  # Árvore de busca
+
+        l1.insereUltimo(inicio, 0, heuristica[inicio], None)
+        l2.insereUltimo(inicio, 0, heuristica[inicio], None)
+
+        visitados = {}
+
+        while not l1.vazio():
+            atual = l1.deletaPrimeiro()
+
+            if atual.estado == fim:
+                return l2.exibeCaminho()
+
+            if atual.estado in visitados and visitados[atual.estado] <= atual.v1:
+                continue
+
+            visitados[atual.estado] = atual.v1
+
+            ind = nos.index(atual.estado)
+            for conexao in grafo[ind][1:]:
+                # Custo do passo (ajuste conforme necessário)
+                g_novo = atual.v1 + 1
+                h_novo = heuristica[conexao]
+                f_novo = g_novo + h_novo
+
+                if conexao not in visitados or g_novo < visitados[conexao]:
+                    l1.insereUltimo(conexao, g_novo, f_novo, atual)
+                    l2.insereUltimo(conexao, g_novo, f_novo, atual)
+
+        return None
+
+    # ---------------------------------------------
+    # BUSCA A ESTRELA ITERATIVO OU AIA*
+
+    def aia_estrela(self, inicio, fim, nos, grafo, heuristica, l_max):
+        for limite in range(1, l_max + 1):
+            resultado = self.a_estrela_limitado(
+                inicio, fim, nos, grafo, heuristica, limite)
+            if resultado:
+                return resultado
+        return None
+
+    def a_estrela_limitado(self, inicio, fim, nos, grafo, heuristica, limite):
+        l1 = listPath()
+        l2 = listPath()
+
+        l1.insereUltimo(inicio, 0, heuristica[inicio], None)
+        l2.insereUltimo(inicio, 0, heuristica[inicio], None)
+
+        visitados = {}
+
+        while not l1.vazio():
+            atual = l1.deletaPrimeiro()
+
+            if atual.estado == fim:
+                return l2.exibeCaminho()
+
+            if atual.v1 + atual.v2 > limite:
+                continue
+
+            if atual.estado in visitados and visitados[atual.estado] <= atual.v1:
+                continue
+
+            visitados[atual.estado] = atual.v1
+
+            ind = nos.index(atual.estado)
+            for conexao in grafo[ind][1:]:
+                g_novo = atual.v1 + 1
+                h_novo = heuristica[conexao]
+                f_novo = g_novo + h_novo
+
+                if f_novo <= limite and (conexao not in visitados or g_novo < visitados[conexao]):
+                    l1.insereUltimo(conexao, g_novo, f_novo, atual)
+                    l2.insereUltimo(conexao, g_novo, f_novo, atual)
+
+        return None

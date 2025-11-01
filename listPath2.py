@@ -1,4 +1,16 @@
-from node1 import Node 
+from node import Node
+
+
+class Node(object):
+    def __init__(self, pai=None, estado=None, v1=None, v2=None, anterior=None, proximo=None):
+        # Garanta que estado é sempre uma string
+        self.estado = estado[0] if isinstance(estado, tuple) else estado
+        self.pai = pai
+        self.v1 = v1
+        self.v2 = v2
+        self.anterior = anterior
+        self.proximo = proximo
+
 
 class listPath(object):
     head = None
@@ -25,7 +37,7 @@ class listPath(object):
             self.tail = novo_no
         else:
             self.tail.proximo = novo_no
-            novo_no.anterior   = self.tail
+            novo_no.anterior = self.tail
             self.tail = novo_no
 
     # REMOVE NO INÍCIO DA LISTA
@@ -57,7 +69,7 @@ class listPath(object):
     # RETORNA O PRIMEIRO DA LISTA
     def primeiro(self):
         return self.head
-    
+
     # RETORNA O ÚLTIMO DA LISTA
     def ultimo(self):
         return self.tail
@@ -68,46 +80,46 @@ class listPath(object):
             return True
         else:
             return False
-        
+
     # EXIBE O CONTEÚDO DA LISTA
     def exibeLista(self):
-        
+
         aux = self.head
         str1 = []
         while aux != None:
             temp = []
             temp.append(aux.estado)
             temp.append(aux.v1)
-            if aux.pai!=None:
+            if aux.pai != None:
                 temp.append((aux.pai).estado)
             else:
                 temp.append("nó raiz")
             str1.append(temp)
             aux = aux.proximo
-        
+
         return str1
-    
+
     # EXIBE O CAMINHO ENCONTRADO
     def exibeCaminho(self):
-        
+
         atual = self.tail
         caminho = []
-        
+
         while atual.pai is not None:
             caminho.append(atual.estado)
             atual = atual.pai
-            
+
         caminho.append(atual.estado)
         caminho = caminho[::-1]
         return caminho
-    
+
     # EXIBE O CAMINHO ENCONTRADO (BIDIRECIONAL)
-    def exibeCaminho1(self,valor):
-                
+    def exibeCaminho1(self, valor):
+
         atual = self.head
         while atual.estado != valor:
             atual = atual.proximo
-    
+
         caminho = []
         atual = atual.pai
         while atual.pai is not None:
