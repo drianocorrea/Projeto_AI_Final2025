@@ -12,6 +12,7 @@ testes = [
     ("Cana_de_Acucar", "Geracao_Eletrica")
 ]
 
+
 def teste_caminhos():
     for origem, destino in testes:
         print(f"\nTestando caminho de {origem} para {destino}:")
@@ -20,6 +21,7 @@ def teste_caminhos():
             print(" → ".join(resultado))
         else:
             print("Caminho não encontrado!")
+
 
 if __name__ == "__main__":
     teste_caminhos()
