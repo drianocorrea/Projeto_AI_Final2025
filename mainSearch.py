@@ -21,7 +21,15 @@ def Gera_Problema(arquivo):
 
 
 # PROGRAMA PRINCIPAL
-nos, grafo = Gera_Problema("sourcelist.json")
+def init_grafo():
+    try:
+        nos, grafo = Gera_Problema("sourcelist.json")
+    except:
+        # Tenta arquivo alternativo se o principal não existir
+        nos, grafo = Gera_Problema("sourcelist.txt")
+    return nos, grafo
+
+nos, grafo = init_grafo()
 
 # print("======== Lista de nós ========\n",nos )
 
@@ -40,28 +48,27 @@ print(metodo)"""
 # recebe valor de caixa de seleção de app.py
 
 
-def mainSearch(self, vem, vai, opcao):
+def mainSearch(self, vem, vai, opcao, limite=5):
     # vem = self.origem.get()
     # vai = self.destino.get()
     origem = vem
     destino = vai
     metodo = opcao
-    limite = 5
     print(metodo)
 
     if origem not in nos or destino not in nos:
         print("Cidade não está na lista")
+        return "Origem ou destino não encontrado na lista"
     elif metodo == "AMPLITUDE":
         path = result.amplitude(origem, destino, nos, grafo)
         if path != None:
-            # caminho = path
-            # custo = len(path)-1
             print("\n*****AMPLITUDE*****")
             print("Caminho: ", path)
             print("Custo..: ", len(path)-1)
             return path
         else:
             print("CAMINHO NÃO ENCONTRADO")
+            return "Caminho não encontrado"
     elif metodo == "PROFUNDIDADE":
         path = result.profundidade(origem, destino, nos, grafo)
         if path != None:
@@ -71,8 +78,9 @@ def mainSearch(self, vem, vai, opcao):
             return path
         else:
             print("CAMINHO NÃO ENCONTRADO")
+            return "Caminho não encontrado"
     elif metodo == "PROFUNDIDADE_LIMITADA":
-        path = result.proflimitada(origem, destino, nos, grafo)
+        path = result.proflimitada(origem, destino, nos, grafo, limite)
         if path != None:
             print("\n*****PROFUNDIDADE LIMITADA*****")
             print("Caminho: ", path)
@@ -103,7 +111,3 @@ def mainSearch(self, vem, vai, opcao):
             print("CAMINHO NÃO ENCONTRADO")
     else:
         print("CAMINHO NÃO ENCONTRADO")
-
-
-
-

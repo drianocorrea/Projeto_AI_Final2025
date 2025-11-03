@@ -1,0 +1,19 @@
+Cana_de_Acucar, Moagem, Clarificacao, Purificacao, Evaporacao, Cristalizacao, Centrifugacao, Secagem, Melaco, Acucar_Cristal, Fermentacao, Destilacao, Desidratacao, Etanol_Hidratado, Etanol_Anidro, Queima_em_Caldeira, Vapor, Turbina, Geracao_Eletrica, Eletricidade
+Cana_de_Acucar, Moagem
+Moagem, Clarificacao, Purificacao, Evaporacao, Queima_em_Caldeira
+Clarificacao, Evaporacao, 
+Evaporacao, Cristalizacao
+Cristalizacao, Centrifugacao
+Centrifugacao, Secagem, Melaco
+Secagem, Acucar_Cristal
+Purificacao, Fermentacao
+Fermentacao, Destilacao
+Destilacao, Desidratacao, Etanol_Hidratado
+Desidratacao, Etanol_Anidro
+Queima_em_Caldeira, Vapor
+Vapor, Turbina
+Turbina, Geracao_Eletrica
+Geracao_Eletrica, Eletricidade
+
+
+

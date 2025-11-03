@@ -5,10 +5,11 @@ class searchPath(object):
 
     # SUCESSORES PARA GRAFO (LISTA DE ADJACENCIAS)
     def sucessores(self, ind, grafo, ordem):
-
         f = []
-        for suc in grafo[ind][::ordem]:
-            f.append(suc)
+        if ind < len(grafo):
+            for suc in grafo[ind][::ordem]:
+                if suc:  # verifica se não é vazio
+                    f.append(suc)
         return f
 # ------------------------------------------------------------------------------
     # CONTROLE DE NÓS REPETIDOS
@@ -136,9 +137,7 @@ class searchPath(object):
     # ---------------------------------------------
     # BUSCA EM PROFUNDIDADE LIMITADA
 
-    def proflimitada(self, inicio, fim, nos, grafo):
-        # limite estabelecido no calculo ponderado como lim=5
-        lim=5
+    def proflimitada(self, inicio, fim, nos, grafo, lim=5):
         # manipular a PILHA para a busca
         l1 = listPath()
 
