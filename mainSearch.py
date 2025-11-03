@@ -29,6 +29,7 @@ def init_grafo():
         nos, grafo = Gera_Problema("sourcelist.txt")
     return nos, grafo
 
+
 nos, grafo = init_grafo()
 
 # print("======== Lista de nós ========\n",nos )
