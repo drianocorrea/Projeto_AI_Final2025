@@ -32,19 +32,41 @@ def init_grafo():
 
 nos, grafo = init_grafo()
 
-# print("======== Lista de nós ========\n",nos )
-
 result = searchPath()
 path = []
-"""
-origem = input("\nOrigem......: ").upper()
-destino = input("Destino.....: ").upper()
-metodo = input("Metodo.....: ").upper()
-print(metodo)"""
-# origem  = "ARAD"
-# origem = app.dropdownini.get()
-# destino = app.dropdownfim.get()
-# destino = "BUCARESTE"
+
+# Heurística para cada nó do grafo - estimativa de distância até produtos finais
+heuristica = {
+    # Produtos finais (distância 0 até o objetivo)
+    'Acucar_Cristal': 0,
+    'Etanol_Anidro': 0,
+    'Etanol_Hidratado': 0,
+    'Melaco': 0,
+    'Geracao_Eletrica': 0,
+    
+    # Matérias-primas (distância máxima até produtos)
+    'Cana_de_Acucar': 5,
+    'Milho': 5,
+    
+    # Processos intermediários (distâncias estimadas)
+    'Moagem': 4,
+    'Clarificacao': 3,
+    'Evaporacao': 2,
+    'Cristalizacao': 2,
+    'Centrifugacao': 1,
+    'Secagem': 1,
+    'Purificacao': 3,
+    'Fermentacao': 2,
+    'Destilacao': 1,
+    'Desidratacao': 1,
+    'Filtracao': 3,
+    'Bagaco': 2,
+    'Queima_em_Caldeira': 2,
+    'Vapor': 1,
+    'Turbina': 1,
+    'Sacarificacao': 3,
+    'Hidrolise_Enzimatica': 4
+}
 
 # recebe valor de caixa de seleção de app.py
 
@@ -110,5 +132,46 @@ def mainSearch(self, vem, vai, opcao, limite=5):
             return path
         else:
             print("CAMINHO NÃO ENCONTRADO")
+    elif metodo == "CUSTO_UNIFORME":
+        path = result.custo_uniforme(origem, destino, nos, grafo)
+        if path != None:
+            print("\n*****CUSTO UNIFORME*****")
+            print("Caminho: ", path)
+            print("Custo..: ", len(path)-1)
+            return path
+        else:
+            print("CAMINHO NÃO ENCONTRADO")
+            return "Caminho não encontrado"
+    elif metodo == "GREEDY":
+        path = result.greedy(origem, destino, nos, grafo, heuristica)
+        if path != None:
+            print("\n*****GREEDY*****")
+            print("Caminho: ", path)
+            print("Custo..: ", len(path)-1)
+            return path
+        else:
+            print("CAMINHO NÃO ENCONTRADO")
+            return "Caminho não encontrado"
+    elif metodo == "A_ESTRELA":
+        path = result.a_estrela(origem, destino, nos, grafo, heuristica)
+        if path != None:
+            print("\n*****A ESTRELA*****")
+            print("Caminho: ", path)
+            print("Custo..: ", len(path)-1)
+            return path
+        else:
+            print("CAMINHO NÃO ENCONTRADO")
+            return "Caminho não encontrado"
+    elif metodo == "AIA_ESTRELA":
+        path = result.aia_estrela(origem, destino, nos, grafo, heuristica, len(nos))
+        if path != None:
+            print("\n*****AIA ESTRELA*****")
+            print("Caminho: ", path)
+            print("Custo..: ", len(path)-1)
+            return path
+        else:
+            print("CAMINHO NÃO ENCONTRADO")
+            return "Caminho não encontrado"
     else:
-        print("CAMINHO NÃO ENCONTRADO")
+        print("MÉTODO NÃO ENCONTRADO")
+        return "Método de busca não encontrado"

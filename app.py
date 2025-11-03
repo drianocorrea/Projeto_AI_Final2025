@@ -29,7 +29,11 @@ choicesmet = [
     'PROFUNDIDADE',            # Busca em profundidade - explora ramos
     'PROFUNDIDADE_LIMITADA',   # Busca em profundidade com limite
     'APROFUNDAMENTO_ITERATIVO',  # Busca que aumenta limite gradualmente
-    'BIDIRECIONAL'             # Busca simultânea do início e fim
+    'BIDIRECIONAL',            # Busca simultânea do início e fim
+    'CUSTO_UNIFORME',          # Busca pelo menor custo uniforme
+    'GREEDY',                  # Busca gulosa pela melhor escolha local
+    'A_ESTRELA',               # Busca A* combinando custo e heurística
+    'AIA_ESTRELA'              # Busca A* com aprofundamento iterativo
 ]
 
 
@@ -159,7 +163,7 @@ class Application():
                 self.custo.insert("1.0", "N/A")
                 return
 
-            # Se for profundidade limitada, pega o valor do limite
+            # Trata diferentes métodos de busca
             if calculo == "PROFUNDIDADE_LIMITADA":
                 try:
                     limite = int(self.limite.get("1.0", END).strip())
@@ -169,6 +173,11 @@ class Application():
                         "1.0", "Por favor, insira um número válido para o limite")
                     self.custo.insert("1.0", "N/A")
                     return
+            elif calculo in ["GREEDY", "A_ESTRELA", "AIA_ESTRELA"]:
+                if calculo == "AIA_ESTRELA":
+                    mostra = mainSearch(self, origem, destino, calculo)
+                else:
+                    mostra = mainSearch(self, origem, destino, calculo)
             else:
                 mostra = mainSearch(self, origem, destino, calculo)
 

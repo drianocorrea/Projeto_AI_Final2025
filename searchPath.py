@@ -366,3 +366,162 @@ class searchPath(object):
             ni += 1
 
         return "caminho não encontrado"
+
+    # ---------------------------------------------
+    # BUSCA DE CUSTO UNIFORME
+
+    def custo_uniforme(self, inicio, fim, nos, grafo):
+        l1 = listPath()  # Lista ordenada por custo
+        l2 = listPath()  # Árvore de busca
+
+        # Inserir nó inicial
+        l1.insereUltimo(inicio, 0, 0, None)
+        l2.insereUltimo(inicio, 0, 0, None)
+
+        # Conjunto de nós visitados com seus custos
+        visitados = {}
+
+        while not l1.vazio():
+            atual = l1.deletaPrimeiro()
+
+            if atual.estado == fim:
+                return l2.exibeCaminho()
+
+            if atual.estado in visitados and visitados[atual.estado] <= atual.v1:
+                continue
+
+            visitados[atual.estado] = atual.v1
+
+            # Explorar sucessores
+            ind = nos.index(atual.estado)
+            for cidade in grafo[ind][1:]:
+                if cidade:  # verifica se não é vazio
+                    novo_custo = atual.v1 + 1  # Custo uniforme para cada passo
+                    if cidade not in visitados or novo_custo < visitados[cidade]:
+                        l1.insereUltimo(cidade, novo_custo, 0, atual)
+                        l2.insereUltimo(cidade, novo_custo, 0, atual)
+
+        return None
+
+    # ---------------------------------------------
+    # BUSCA GULOSA (GREEDY)
+
+    def greedy(self, inicio, fim, nos, grafo, heuristica):
+        l1 = listPath()  # Ordenado pela heurística
+        l2 = listPath()  # Árvore de busca
+
+        # Garante que o nó inicial tem uma heurística
+        h_inicio = heuristica.get(inicio, float('inf'))
+        l1.insereUltimo(inicio, 0, h_inicio, None)
+        l2.insereUltimo(inicio, 0, h_inicio, None)
+
+        visitados = []
+
+        while not l1.vazio():
+            atual = l1.deletaPrimeiro()
+
+            if atual.estado == fim:
+                caminho = l2.exibeCaminho()
+                return caminho
+
+            if atual.estado in visitados:
+                continue
+
+            visitados.append(atual.estado)
+
+            ind = nos.index(atual.estado)
+            for conexao in grafo[ind][1:]:
+                if conexao and conexao not in visitados:
+                    h = heuristica.get(conexao, float('inf'))
+                    l1.insereUltimo(conexao, 0, h, atual)
+                    l2.insereUltimo(conexao, 0, h, atual)
+
+        return None
+
+    # ---------------------------------------------
+    # BUSCA A*
+
+    def a_estrela(self, inicio, fim, nos, grafo, heuristica):
+        l1 = listPath()  # Ordenado por f(n) = g(n) + h(n)
+        l2 = listPath()  # Árvore de busca
+
+        # Garante que o nó inicial tem uma heurística
+        h_inicio = heuristica.get(inicio, float('inf'))
+        l1.insereUltimo(inicio, 0, h_inicio, None)
+        l2.insereUltimo(inicio, 0, h_inicio, None)
+
+        visitados = {}
+
+        while not l1.vazio():
+            atual = l1.deletaPrimeiro()
+
+            if atual.estado == fim:
+                caminho = l2.exibeCaminho()
+                return caminho
+
+            if atual.estado in visitados and visitados[atual.estado] <= atual.v1:
+                continue
+
+            visitados[atual.estado] = atual.v1
+
+            ind = nos.index(atual.estado)
+            for conexao in grafo[ind][1:]:
+                if conexao:  # verifica se não é vazio
+                    g_novo = atual.v1 + 1
+                    h_novo = heuristica.get(conexao, float('inf'))
+                    f_novo = g_novo + h_novo
+
+                    if conexao not in visitados or g_novo < visitados[conexao]:
+                        l1.insereUltimo(conexao, g_novo, f_novo, atual)
+                        l2.insereUltimo(conexao, g_novo, f_novo, atual)
+
+        return None
+
+    # ---------------------------------------------
+    # BUSCA A* ITERATIVO (IDA*)
+
+    def aia_estrela(self, inicio, fim, nos, grafo, heuristica, l_max):
+        for limite in range(1, l_max + 1):
+            resultado = self._a_estrela_limitado(inicio, fim, nos, grafo, heuristica, limite)
+            if resultado:
+                return resultado
+        return None
+
+    def _a_estrela_limitado(self, inicio, fim, nos, grafo, heuristica, limite):
+        l1 = listPath()
+        l2 = listPath()
+
+        # Garante que o nó inicial tem uma heurística
+        h_inicio = heuristica.get(inicio, float('inf'))
+        l1.insereUltimo(inicio, 0, h_inicio, None)
+        l2.insereUltimo(inicio, 0, h_inicio, None)
+
+        visitados = {}
+
+        while not l1.vazio():
+            atual = l1.deletaPrimeiro()
+
+            if atual.estado == fim:
+                caminho = l2.exibeCaminho()
+                return caminho
+
+            if atual.v1 + atual.v2 > limite:
+                continue
+
+            if atual.estado in visitados and visitados[atual.estado] <= atual.v1:
+                continue
+
+            visitados[atual.estado] = atual.v1
+
+            ind = nos.index(atual.estado)
+            for conexao in grafo[ind][1:]:
+                if conexao:  # verifica se não é vazio
+                    g_novo = atual.v1 + 1
+                    h_novo = heuristica.get(conexao, float('inf'))
+                    f_novo = g_novo + h_novo
+
+                    if f_novo <= limite and (conexao not in visitados or g_novo < visitados[conexao]):
+                        l1.insereUltimo(conexao, g_novo, f_novo, atual)
+                        l2.insereUltimo(conexao, g_novo, f_novo, atual)
+
+        return None
