@@ -482,7 +482,8 @@ class searchPath(object):
 
     def aia_estrela(self, inicio, fim, nos, grafo, heuristica, l_max):
         for limite in range(1, l_max + 1):
-            resultado = self._a_estrela_limitado(inicio, fim, nos, grafo, heuristica, limite)
+            resultado = self._a_estrela_limitado(
+                inicio, fim, nos, grafo, heuristica, limite)
             if resultado:
                 return resultado
         return None

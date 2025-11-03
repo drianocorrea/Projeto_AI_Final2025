@@ -43,11 +43,11 @@ heuristica = {
     'Etanol_Hidratado': 0,
     'Melaco': 0,
     'Geracao_Eletrica': 0,
-    
+
     # Matérias-primas (distância máxima até produtos)
     'Cana_de_Acucar': 5,
     'Milho': 5,
-    
+
     # Processos intermediários (distâncias estimadas)
     'Moagem': 4,
     'Clarificacao': 3,
@@ -163,7 +163,8 @@ def mainSearch(self, vem, vai, opcao, limite=5):
             print("CAMINHO NÃO ENCONTRADO")
             return "Caminho não encontrado"
     elif metodo == "AIA_ESTRELA":
-        path = result.aia_estrela(origem, destino, nos, grafo, heuristica, len(nos))
+        path = result.aia_estrela(
+            origem, destino, nos, grafo, heuristica, len(nos))
         if path != None:
             print("\n*****AIA ESTRELA*****")
             print("Caminho: ", path)
