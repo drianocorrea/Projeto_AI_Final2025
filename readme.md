@@ -1,6 +1,18 @@
 ### BREVE DESCRIÇÃO DE USO
 
 ---
+ATIVIDADE DE IA - PROF. LUIZ FERNANDO - FATEC CRUZEIRO - 2025
+
+ALUNOS:
+        ADRIANO A CORREA DA SILVA
+        MARCOS
+
+        6º SEMESTRE DE ANALISE E DESENVOLVIMENTO DE SISTEMAS
+
+ARQUIVO DEIXEI DISPONIVEL TAMBÉM NO GITHUB
+
+em: https://github.com/drianocorrea/Projeto_AI_Final2025
+
 
 - Utilizar preferencialmente O Vscode. Erros de outras IDE's podem ser de compatibilidade de bibliotecas e forma como a interação ocorre em plataformas diferentes.
 - Instalar biblioteca networkx junto com matplotlib. 
